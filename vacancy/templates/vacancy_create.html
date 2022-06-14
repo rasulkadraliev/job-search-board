@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block page_content %}
+
+<h2>Create vacancy<span style="font-size: 50%">(fields with * are required)</span></h2>
+
+<!--this style is to format fields 'description' and 'requirements' -->
+<style>
+#description, #requirements {resize: none;}
+input[type] {width: 25%}
+</style>
+
+<form action="{% url 'vacancy_create' %}" method="POST">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <br>
+    <button type="submit" class="btn btn-primary" name="save">Save & Exit</button>
+    <button type="submit" class="btn btn-success" name="save_add">Save & Add new</button>
+    <a href="{% url 'vacancy_index' %}" class="btn btn-danger">Cancel</a>
+</form>
+{% endblock %}

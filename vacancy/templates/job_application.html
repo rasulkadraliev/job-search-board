@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block page_content %}
+
+<h2>Application for {{ vacancy.position }}</h2>
+
+<style>
+#status, #date_submitted {width: 190px;}
+</style>
+
+<form action="{% url 'job_application' vacancy.pk %} " method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <button type="submit" class="btn btn-primary">Save</button>
+     <a href="{% url 'vacancy_detail' vacancy.pk %}" class="btn btn-danger">Cancel</a>
+</form>
+
+{% endblock %}

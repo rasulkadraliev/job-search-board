@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_content %}
+
+<h2>Your Vacancies</h2>
+
+<div class="row">
+{% for vacancy in vacancies %}
+
+    <div class="col-md-4">
+        <div class="card mb-2">
+
+            {% if vacancy.applications.count > 0 %}
+                <div class="card-header text-white bg-success">
+                Applied on {{ vacancy.applications.all.0.date_submitted }}
+                </div>
+            {% else %}
+                <div class="card-header text-white bg-primary">
+                Not applied
+                </div>
+            {% endif %}
+
+            <div class="card-body">
+                <h5 class="card-title">{{ vacancy.position }}</h5>
+                <h5 class="card-title">{{ vacancy.company }}</h5>
+
+                {% if vacancy.applications.count > 0 %}
+                    <p><strong>Date applied: </strong>{{ vacancy.applications.all.0.date_submitted }}</p>
+                    <p><strong>Status: </strong>{{ vacancy.applications.all.0.status }}</p>
+                {% else %}
+                    <p><strong>Date published: </strong>{{ vacancy.date_published }}</p>
+                    <p><a href="{{ vacancy.url }}" target="_blank"><strong>Vacancy URL</strong></a></p>
+                {% endif %}
+
+                <form action="{% url 'vacancy_delete' vacancy.pk %}" method="POST" style="float:right">
+                    {% csrf_token %}
+                    <button onclick="return confirm('Are you sure you want to delete this vacancy? This cannot be undone');"
+                        type="submit" class="btn btn-danger">
+                        Delete
+                    </button>
+                </form>
+                <form action="{% url 'vacancy_detail' vacancy.pk %}" method="POST" style="float:left">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Details</button>
+                </form>
+             </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_content %}
+<h2>{{ vacancy.position }}</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <h5>Company:</h5>
+        <p>{{ vacancy.company }}</p>
+        <h5>Date published:</h5>
+        <p>{{ vacancy.date_published }}</p>
+        <h5><a href="{{ vacancy.url }}" target="_blank">Vacancy URL</a></h5>
+        <h5>Description:</h5>
+        <p>{{ vacancy.description }}</p>
+        <h5>Requirements:</h5>
+        <p>{{ vacancy.requirements }}</p>
+        <h5>Qualification:</h5>
+        <p>{{ vacancy.qualification }}</p>
+        <h5>Recruiter name:</h5>
+        <p>{{ vacancy.recruiter_name }}</p>
+        <h5>Recruiter position:</h5>
+        <p>{{ vacancy.recruiter_position }}</p>
+        <h5>Email:</h5>
+        {% if vacancy.recruiter_email %}
+            <p><a href="mailto:{{ vacancy.recruiter_email }}?subject={{ vacancy.position }} vacancy">{{ vacancy.recruiter_email }}</a></p>
+        {% else %}
+            <p>No email</p>
+        {% endif %}
+
+       <form action="{% url 'vacancy_delete' vacancy.pk %}" method="POST">
+            {% csrf_token %}
+           {% if not vacancy.applications.count > 0 %}
+               <a href="{% url 'job_application' vacancy.pk %}" class="btn btn-success" id="vacancy.pk">Apply</a>
+           {% endif %}
+           <a href="{% url 'vacancy_index' %}" class="btn btn-primary">Back</a>
+           <button onclick="return confirm('Are you sure you want to delete this vacancy? This cannot be undone.');"
+                type="submit" class="btn btn-danger" name="delete">
+                Delete vacancy
+           </button>
+        </form>
+
+    {% if vacancy.applications.count > 0 %}
+        <form action="{% url 'open_file' vacancy.pk %}" method="GET" target="_blank">
+            <h5 class="card-title">Application status:</h5>
+            <ul>
+                <li>Applied on: {{ vacancy.applications.all.0.date_submitted }}</li>
+                <li>Status: {{ vacancy.applications.all.0.status }}</li>
+            </ul>
+            <button type="submit" class="btn btn-primary" name="resume">
+                View resume
+            </button>
+            {% if vacancy.applications.all.0.cover_letter %}
+               <button type="submit" class="btn btn-success" name="cover_letter">
+                View cover letter
+               </button>
+            {% endif %}
+        </form>
+        <form action="{% url 'application_delete' vacancy.pk %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" name="delete_app" onclick="return confirm('Are you sure you want to delete the job application? This cannot be undone');">
+            Delete application
+            </button>
+        </form>
+    {% endif %}
+
+    </div>
+</div>
+{% endblock %}

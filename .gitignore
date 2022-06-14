@@ -1,0 +1,14 @@
+.idea
+__pycache__
+.DS_Store
+vacancy/__pycache__
+vacancy/migrations
+vacancy/.DS_Store
+vacancy/__init__.py
+jobSearch/__pycache__
+jobSearch/__init__.py
+resume_files
+# Elastic Beanstalk Files
+#.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
